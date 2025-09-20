@@ -21,6 +21,13 @@ docker-compose up db
 docker-compose up --build web db jenkins
 ```
 
+### 🔥 Hot Reload Habilitado
+Los cambios en archivos locales se reflejan automáticamente en Docker:
+- ✅ Edita archivos **LOCALMENTE** 
+- ✅ Docker refleja cambios **AUTOMÁTICAMENTE**
+- ✅ Flask recarga **INSTANTÁNEAMENTE**
+- ❌ **NO necesitas** rebuild ni copiar archivos
+
 ### Detener todos los servicios
 ```bash
 docker-compose down
@@ -37,6 +44,14 @@ docker-compose down -v
 ./docker.sh test-simple # Tests sin cobertura
 ./docker.sh test-file <archivo> # Test específico
 ```
+
+### Scripts de Linting
+```bash
+./lint.sh check  # Verificar formato sin modificar archivos
+./lint.sh fix    # Aplicar correcciones automáticamente
+```
+
+**💡 Tip**: Ejecuta `./lint.sh fix` antes de hacer commit para evitar fallos en CI.
 
 ## Configuración
 
