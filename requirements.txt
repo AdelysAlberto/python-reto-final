@@ -5,4 +5,7 @@ Flask-SQLAlchemy
 pytest
 pytest-cov
 pytest-flask
+flake8
+black
+isort
 
