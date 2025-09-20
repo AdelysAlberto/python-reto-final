@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URI: postgresql://myuser:mypassword@db:5432/mydatabase
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  jenkins:
+    build: ./jenkins-docker
+    restart: always
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - .:/workspace
+    environment:
+      - JENKINS_OPTS=--httpPort=8080
+    user: root
+
+volumes:
+  postgres_data:
+  jenkins_data:

@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
-from app.models import Data
+from flask import Blueprint, jsonify, request
+
 from app import db
+from app.models import Data
 
 data_routes = Blueprint("data_routes", __name__)
 
