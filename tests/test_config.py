@@ -27,13 +27,34 @@ class TestDevelopmentConfig:
         assert config.DEBUG is True
         assert config.SQLALCHEMY_TRACK_MODIFICATIONS is False
 
-    @patch.dict(os.environ, {}, clear=True)  # Clear SECRET_KEY from env
-    def test_development_config_secret_key(self):
-        config = DevelopmentConfig()
-        assert config.SECRET_KEY == "your_secret_key"
+    def test_development_config_secret_key_default(self):
+        # Test default value when no environment variable is set
+        with patch.dict(os.environ, {}, clear=True):
+            # Reload the config module to pick up the cleared environment
+            import importlib
+
+            from app import config as config_module
+
+            importlib.reload(config_module)
+
+            config = config_module.DevelopmentConfig()
+            assert config.SECRET_KEY == "your_secret_key"
+
+    def test_development_config_secret_key_from_env(self):
+        # Test that it uses environment variable when set
+        with patch.dict(os.environ, {"SECRET_KEY": "test-env-key"}):
+            # Reload the config module to pick up the new environment
+            import importlib
+
+            from app import config as config_module
+
+            importlib.reload(config_module)
+
+            config = config_module.DevelopmentConfig()
+            assert config.SECRET_KEY == "test-env-key"
 
     def test_development_config_respects_env_var(self):
-        # Test that it respects environment variable when set
+        # Test that it respects environment variable when set (current behavior)
         config = DevelopmentConfig()
         assert isinstance(config.SECRET_KEY, str)
         assert len(config.SECRET_KEY) > 0
@@ -46,13 +67,34 @@ class TestProductionConfig:
         assert config.DEBUG is False
         assert config.SQLALCHEMY_TRACK_MODIFICATIONS is False
 
-    @patch.dict(os.environ, {}, clear=True)  # Clear SECRET_KEY from env
-    def test_production_config_secret_key(self):
-        config = ProductionConfig()
-        assert config.SECRET_KEY == "your_secret_key"
+    def test_production_config_secret_key_default(self):
+        # Test default value when no environment variable is set
+        with patch.dict(os.environ, {}, clear=True):
+            # Reload the config module to pick up the cleared environment
+            import importlib
+
+            from app import config as config_module
+
+            importlib.reload(config_module)
+
+            config = config_module.ProductionConfig()
+            assert config.SECRET_KEY == "your_secret_key"
+
+    def test_production_config_secret_key_from_env(self):
+        # Test that it uses environment variable when set
+        with patch.dict(os.environ, {"SECRET_KEY": "test-env-key"}):
+            # Reload the config module to pick up the new environment
+            import importlib
+
+            from app import config as config_module
+
+            importlib.reload(config_module)
+
+            config = config_module.ProductionConfig()
+            assert config.SECRET_KEY == "test-env-key"
 
     def test_production_config_respects_env_var(self):
-        # Test that it respects environment variable when set
+        # Test that it respects environment variable when set (current behavior)
         config = ProductionConfig()
         assert isinstance(config.SECRET_KEY, str)
         assert len(config.SECRET_KEY) > 0
