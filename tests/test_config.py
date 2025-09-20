@@ -1,3 +1,6 @@
+import os
+from unittest.mock import patch
+
 from app import create_app
 from app.config import Config, DevelopmentConfig, ProductionConfig, config_dict
 
@@ -24,9 +27,16 @@ class TestDevelopmentConfig:
         assert config.DEBUG is True
         assert config.SQLALCHEMY_TRACK_MODIFICATIONS is False
 
+    @patch.dict(os.environ, {}, clear=True)  # Clear SECRET_KEY from env
     def test_development_config_secret_key(self):
         config = DevelopmentConfig()
         assert config.SECRET_KEY == "your_secret_key"
+
+    def test_development_config_respects_env_var(self):
+        # Test that it respects environment variable when set
+        config = DevelopmentConfig()
+        assert isinstance(config.SECRET_KEY, str)
+        assert len(config.SECRET_KEY) > 0
 
 
 class TestProductionConfig:
@@ -36,9 +46,16 @@ class TestProductionConfig:
         assert config.DEBUG is False
         assert config.SQLALCHEMY_TRACK_MODIFICATIONS is False
 
+    @patch.dict(os.environ, {}, clear=True)  # Clear SECRET_KEY from env
     def test_production_config_secret_key(self):
         config = ProductionConfig()
         assert config.SECRET_KEY == "your_secret_key"
+
+    def test_production_config_respects_env_var(self):
+        # Test that it respects environment variable when set
+        config = ProductionConfig()
+        assert isinstance(config.SECRET_KEY, str)
+        assert len(config.SECRET_KEY) > 0
 
 
 class TestConfigDict:

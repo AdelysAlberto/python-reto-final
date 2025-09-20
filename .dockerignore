@@ -12,3 +12,8 @@ README.md
 htmlcov/
 .vscode/
 *.log
+.github/
+jenkins-docker/
+HOT-RELOAD.md
+DEPLOYMENT-GUIDE.md
+test-documentation.md
